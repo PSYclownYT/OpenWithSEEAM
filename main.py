@@ -4,7 +4,10 @@ from PIL import Image, ImageTk
 import os
 
 # Assuming name is fetched from a file
-name = "User"
+with open('assets/userdata.txt') as f:
+    name = f.read()
+
+
 
 # Setting up app assets directory
 assets_path = "GameDetails/"
@@ -40,6 +43,7 @@ def display_game_details_from_dir(game_name):
     thumbnail_path = os.path.join(game_dir, "thumbnail.png")
     description_path = os.path.join(game_dir, "description.txt")
     script_path = os.path.join(game_dir, "main.py")
+    game_dispname = os.path.join(game_dir, "name.txt")
 
     # Thumbnail Image
     if os.path.exists(thumbnail_path):
@@ -144,6 +148,30 @@ def create_buttons_with_dynamic_sidebar():
         width=20
     )
     close_button.pack(side="bottom", pady=20)
+    
+
+
+
+
+
+
+    def install_game():
+        exec(open("InstallGame.py").read())  # Execute the script when the button is clicked
+
+# Create the button
+    install_button = tk.Button(
+        sidebar,
+        text="Get More Games",
+        command=install_game,  # Assign the function here
+        font=BUTTON_FONT,
+        bg="#42f5a1",  # Green color for the button
+        fg=TEXT_COLOR,
+        relief="flat",
+        bd=0,
+        width=20
+    )
+    install_button.pack(side="bottom", pady=20)
+
     
 
     # Main content area
