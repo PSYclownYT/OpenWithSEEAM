@@ -5,7 +5,7 @@ import requests
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from urllib.parse import urlparse
-
+#i messed something up
 
 BG_COLOR = "#527687"
 BTN_COLOR = "#3498db"
