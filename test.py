@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import os
-import SeeamDictLib
+import SeeamDictLib as sdl
 
 # Assuming name is fetched from a file
 name = "User"
@@ -27,72 +27,22 @@ def fetch_requirements():
     """Simulate fetching requirements."""
     print("Fetching requirements.txt...")
 
+# Adjust directory paths
+games_dir = "allthegames"
 
-
-
-
-
-
-class GetG(object):
-    def __init__(self):
-        self.name = ""
-        self.address = ""
-        self.phone = ""
-        self.age = ""
-        self.whip = {}
-
-    def writing(self):
-        self.whip[p.name] = p.age, p.address, p.phone
-        target = open('deed.txt', 'a')
-        target.write(str(self.whip))
-        print self.whip
-
-    def reading(self):
-        s = open('deed.txt', 'r').read()
-        self.whip = eval(s)
-        name = raw_input("> ")
-        if name in self.whip:
-            print self.whip[name]
-
-p = GetG()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def display_game_details(game_name):
-    """Update main content area to display selected game details."""
+def display_game_details_from_dir(game_name):
+    """Update main content area to display selected game details based on directory structure."""
     # Clear current content
     for widget in main_content.winfo_children():
         widget.destroy()
 
-    game_info = game_data.get(game_name, {})
-    if not game_info:
-        return
+    # Define paths for game assets
+    game_dir = os.path.join(games_dir, game_name)
+    thumbnail_path = os.path.join(game_dir, "thumbnail.png")
+    description_path = os.path.join(game_dir, "description.txt")
+    script_path = os.path.join(game_dir, "main.py")
 
     # Thumbnail Image
-    thumbnail_path = game_info["thumbnail"]
     if os.path.exists(thumbnail_path):
         thumbnail_img = Image.open(thumbnail_path).resize((200, 100))
         thumbnail_photo = ImageTk.PhotoImage(thumbnail_img)
@@ -101,9 +51,15 @@ def display_game_details(game_name):
         thumbnail_label.pack(pady=(10, 10))
 
     # Game Description
+    if os.path.exists(description_path):
+        with open(description_path, "r") as desc_file:
+            description = desc_file.read()
+    else:
+        description = "No description available."
+
     description_label = tk.Label(
         main_content,
-        text=game_info["description"],
+        text=description,
         font=LABEL_FONT,
         fg=TEXT_COLOR,
         bg=BG_COLOR,
@@ -116,7 +72,7 @@ def display_game_details(game_name):
     play_button = tk.Button(
         main_content,
         text="Play",
-        command=lambda: run_script(game_info["script_path"]),
+        command=lambda: run_script(script_path),
         font=BUTTON_FONT,
         bg=BTN_COLOR,
         fg=TEXT_COLOR,
@@ -126,7 +82,7 @@ def display_game_details(game_name):
     )
     play_button.pack(pady=20)
 
-def create_buttons_with_sidebar_and_details():
+def create_buttons_with_dynamic_sidebar():
     # Main window setup
     window = tk.Tk()
     window.title("Epic App Launcher")
@@ -137,7 +93,7 @@ def create_buttons_with_sidebar_and_details():
     sidebar = tk.Frame(window, width=300, bg="#1e272e")
     sidebar.pack(side="left", fill="y")
 
-    # Add buttons to the sidebar for each game
+    # Sidebar label
     sidebar_label = tk.Label(
         sidebar,
         text="Available Games",
@@ -147,26 +103,30 @@ def create_buttons_with_sidebar_and_details():
     )
     sidebar_label.pack(pady=20)
 
-    for game_name in game_data.keys():
-        button = tk.Button(
-            sidebar,
-            text=game_name,
-            command=lambda name=game_name: display_game_details(name),
-            font=BUTTON_FONT,
-            bg=BTN_COLOR,
-            fg=TEXT_COLOR,
-            relief="flat",
-            bd=0,
-            width=20
-        )
-        button.pack(pady=10)
+    # Dynamically add buttons for each game in the directory
+    if os.path.exists(games_dir):
+        for game_folder in os.listdir(games_dir):
+            game_path = os.path.join(games_dir, game_folder)
+            if os.path.isdir(game_path):
+                button = tk.Button(
+                    sidebar,
+                    text=game_folder,
+                    command=lambda name=game_folder: display_game_details_from_dir(name),
+                    font=BUTTON_FONT,
+                    bg=BTN_COLOR,
+                    fg=TEXT_COLOR,
+                    relief="flat",
+                    bd=0,
+                    width=20
+                )
+                button.pack(pady=10)
 
     # Main content area
     global main_content
     main_content = tk.Frame(window, bg=BG_COLOR)
     main_content.pack(side="left", fill="both", expand=True)
 
-    # Welcome content in main content area
+    # Initial content in main content area
     welcome_label = tk.Label(
         main_content,
         text=f'Welcome, {name}! Select a game to see details.',
@@ -178,5 +138,4 @@ def create_buttons_with_sidebar_and_details():
 
     window.mainloop()
 
-# Uncomment to run the app
-create_buttons_with_sidebar_and_details()
+create_buttons_with_dynamic_sidebar()
