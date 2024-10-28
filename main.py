@@ -24,8 +24,11 @@ TITLE_FONT = ("Helvetica", 16, "bold")
 BUTTON_FONT = ("Helvetica", 14)
 LABEL_FONT = ("Helvetica", 12)
 
+# Path to InstallGame.py
+install_game_script = Path("InstallGame.py")
+
 def run_script(script_name):
-    """Simulate script execution (in a real scenario this would call a subprocess)."""
+    """Run a Python script located at script_name."""
     print(f'Running script: {script_name}')
     os.system(f'python "{script_name}"')
 
@@ -41,7 +44,7 @@ def display_game_details_from_dir(game_name):
     thumbnail_path = game_dir / "thumbnail.png"
     description_path = game_dir / "description.txt"
     script_path = game_dir / "main.py"
-    extra_script_path = game_dir / "InstallGame.py"
+    extra_script_path = game_dir / "extras.py"
 
     # Thumbnail Image
     if thumbnail_path.exists():
@@ -143,6 +146,21 @@ def create_buttons_with_sidebar_and_logo():
                     width=20
                 )
                 button.pack(pady=10)
+
+    # Install Game Button - Always Visible on the Sidebar
+    if install_game_script.exists():
+        install_button = tk.Button(
+            sidebar,
+            text="Install More Games",
+            command=lambda: run_script(install_game_script),
+            font=BUTTON_FONT,
+            bg="#1abc9c",  # Different color for installation
+            fg=TEXT_COLOR,
+            relief="flat",
+            bd=0,
+            width=20
+        )
+        install_button.pack(pady=(30, 10))  # Add padding to position it below the game list
 
     # Main content area
     global main_content
