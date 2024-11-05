@@ -51,6 +51,7 @@ You may want to redistribute an app as a seeam package to provide ease of instal
 ### Windows packages:
 use this code in `main.py`
 ```python
+import os
 os.startfile("assets\example.exe")
 ```
 ### Web apps
