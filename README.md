@@ -1,4 +1,4 @@
-<img src="https://codeberg.org/psyclown/SEEAM/raw/branch/main/assets/SeeamLogo.png" alt="drawing" width="200"/>
+<img src="[https://codeberg.org/psyclown/SEEAM/raw/branch/main/assets/SeeamLogo.png](https://raw.githubusercontent.com/PSYclownYT/OpenWithSEEAM/refs/heads/main/webassets/SeeamLogo.png)" alt="drawing" width="200"/>
 
 # Seeam Docs
 Hello! and thank you for choosing Seeam! The worst way to distribute your files!
